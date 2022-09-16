@@ -7,11 +7,16 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Counter counter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("onCreate", "OnCreateCalled");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        counter = new Counter();
+
     }
 
     @Override

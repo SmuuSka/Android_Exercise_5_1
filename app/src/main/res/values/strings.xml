@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Exercise_5_1</string>
+    <string name="hit_me_button">Hit Me!</string>
+    <string name="creations_ViewTxt">Creations</string>
+    <string name="visibles_ViewTxt">Visibles</string>
+    <string name="hitMe_valueTxt">Hits</string>
+    <string name="resetButton">Reset</string>
 </resources>
