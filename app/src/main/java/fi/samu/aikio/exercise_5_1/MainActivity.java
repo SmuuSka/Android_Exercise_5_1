@@ -13,16 +13,13 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int hitValue, creationValue, visibleValue;
-
+    private int hitValue, creationValue, visibleValue;
     private Counter hitCounter, creationCounter, visiblesCounter;
-    private Button hitMeButton, resetButton;
     private TextView creationView, visiblesView, hitsView;
     private String currentHitText, currentCreationsText, currentVisiblesText;
-    private int lastSavedCreations, lastSavedVisibles, lastSavedHits;
-    private int startValueHit, startValueCreations, startValueVisibles, defaultValue = 0;
+    private int defaultValue = 0;
 
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,66 +28,51 @@ public class MainActivity extends AppCompatActivity {
         Log.d("onCreate", "OnCreateCalled");
         sharedPreferences = getSharedPreferences("Saved data", Context.MODE_PRIVATE);
 
-        //Creation GetSet
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("CreateCount", creationCounter.getValue());
-        editor.commit();
-        Toast.makeText(MainActivity.this, "Hit Count Saved", Toast.LENGTH_LONG).show();
+        //Get saved values or set default value = 0
+        hitValue = sharedPreferences.getInt("Hits", defaultValue);
+        creationValue = sharedPreferences.getInt("Creations", defaultValue);
+        visibleValue = sharedPreferences.getInt("Visibles", defaultValue);
 
-
-
-        hitValue = sharedPreferences.getInt("HitCount", defaultValue);
-        creationValue = sharedPreferences.getInt("CreateCount", defaultValue);
-        visibleValue = sharedPreferences.getInt("VisibleCount", defaultValue);
-
-
-        //App create a new counter if don't have one
-        hitCounter = new Counter();
-        creationCounter = new Counter();
-        visiblesCounter = new Counter();
+        //App create a new counter
+        hitCounter = new Counter(-100,100,hitValue,1);
+        creationCounter = new Counter(-100,100,creationValue,1);
+        visiblesCounter = new Counter(-100,100,visibleValue,1);
 
         //Button references
-        hitMeButton = findViewById(R.id.hitMeButton);
-        resetButton = findViewById(R.id.resetButton);
+        Button hitMeButton = findViewById(R.id.hitMeButton);
+
+        Button resetButton = findViewById(R.id.resetButton);
 
         //TextView references
         creationView = findViewById(R.id.creationsViewText);
         visiblesView = findViewById(R.id.visiblesViewText);
         hitsView = findViewById(R.id.hitMeViewTxt);
 
-        //Set start values
-        startValueHit = hitCounter.getValue();
-        startValueCreations = creationCounter.getValue();
-        startValueVisibles = visiblesCounter.getValue();
-
-
-        //Set start headers
+        //Set textView headers
         currentHitText = hitsView.getText().toString() + " \n";
-        hitsView.setText(currentHitText + startValueHit);
+        hitsView.setText(currentHitText + Integer.toString(hitCounter.getValue()));
 
         currentCreationsText = creationView.getText().toString() + " \n";
-        creationView.setText(currentCreationsText + startValueCreations);
+        creationView.setText(currentCreationsText + Integer.toString(creationCounter.getValue()));
 
         currentVisiblesText = visiblesView.getText().toString() + " \n";
-        visiblesView.setText(currentVisiblesText + startValueVisibles);
+        visiblesView.setText(currentVisiblesText + Integer.toString(visiblesCounter.getValue()));
 
+        //Increase creations by one
         creationView.setText(currentCreationsText + Integer.toString(creationCounter.incrementValueByStep()));
 
-        //If having something
-        hitsView.setText(currentHitText + Integer.toString(hitValue));
-
+        //Save creation value to sharedPreferences
+        saveCount("Creations", creationCounter.getValue());
 
         //Hit me-button pressed method
         hitMeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hitsView.setText(currentHitText + Integer.toString(hitCounter.incrementValueByStep()));
-
-
             }
         });
 
-        //Reset all values
+        //Reset-button resets all values
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d("onStart", "OnStartCalled");
         visiblesView.setText(currentVisiblesText + Integer.toString(visiblesCounter.incrementValueByStep()));
-
     }
 
     @Override
@@ -121,10 +102,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d("onPause", "OnPauseCalled");
-        saveHitCount();
-        saveCreationCount();
 
-
+        //If pause was called, save values to sharedPreferences
+        saveCount("Hits", hitCounter.getValue());
+        saveCount("Creations", creationCounter.getValue());
+        saveCount("Visibles", visiblesCounter.getValue());
     }
 
     @Override
@@ -145,18 +127,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("onDestroy", "OnDestroyCalled");
 
     }
-
-    private void saveHitCount(){
+    // Method for saving values to sharedPreferences
+    private void saveCount(String key, int value){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("HitCount", hitCounter.getValue());
+        editor.putInt(key, value);
         editor.commit();
-        Toast.makeText(MainActivity.this, "Hit Count Saved", Toast.LENGTH_LONG).show();
-    }
-
-    private void saveCreationCount(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("CreationCount", creationCounter.getValue());
-        editor.commit();
-        Toast.makeText(MainActivity.this, "Creation Count Saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, key + " Count Saved", Toast.LENGTH_LONG).show();
     }
 }
