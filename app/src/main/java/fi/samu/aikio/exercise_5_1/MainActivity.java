@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 creationView.setText(currentCreationsText + Integer.toString(creationCounter.resetValue()));
                 visiblesView.setText(currentVisiblesText + Integer.toString(visiblesCounter.resetValue()));
 
+                saveCount("Hits", hitCounter.getValue());
+                saveCount("Creations", creationCounter.getValue());
+                saveCount("Visibles", visiblesCounter.getValue());
+
             }
         });
 

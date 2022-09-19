@@ -43,8 +43,8 @@ public class Counter {
     }
 
     public int resetValue(){
-        currentValue = startValue;
-        return startValue;
+        currentValue = 0;
+        return this.startValue = 0;
     }
 
     public double valueToDecimal(){
