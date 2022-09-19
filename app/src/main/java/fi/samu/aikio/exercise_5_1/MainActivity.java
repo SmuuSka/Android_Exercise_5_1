@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         //Reset-button resets all values
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 hitsView.setText(currentHitText + Integer.toString(hitCounter.resetValue()));
                 creationView.setText(currentCreationsText + Integer.toString(creationCounter.resetValue()));
                 visiblesView.setText(currentVisiblesText + Integer.toString(visiblesCounter.resetValue()));
+
             }
         });
 
